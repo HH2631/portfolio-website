@@ -13,7 +13,7 @@ Let me introduce myself, I'm Hamzeh Hijazi. On this occasion, I'd like to share 
 - SweetAlert2  
 
 **Website Link:**  
-[https://www.hamzehhijazi.dev/](https://www.hamzehhijazi.dev/)  
+[https://hhijazi.vercel.app/](https://hhijazi.vercel.app/)  
 
 We would appreciate it if you decide to use this project. Please include credit when using it. Thank you! 🙏  
 

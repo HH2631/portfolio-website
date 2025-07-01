@@ -122,7 +122,7 @@ const realProjectsData = [
     Title: "AI-Powered Portfolio Platform",
     Description: "A modern, responsive portfolio website built with React, featuring AI-powered interactions, real-time comments, and dynamic content management. Includes advanced animations, Firebase integration, and optimized performance.",
     Img: "/Photo.png",
-    Link: "https://hamzehhijazi.dev",
+    Link: "https://hhijazi.vercel.app",
     TechStack: ["React", "Firebase", "Tailwind CSS", "JavaScript", "Vite"],
     Features: [
       "AI-powered comment system with image uploads",

@@ -156,6 +156,7 @@ const ContactPage = () => {
               {/* FormSubmit Configuration */}
               <input type="hidden" name="_template" value="table" />
               <input type="hidden" name="_captcha" value="false" />
+              <input type="hidden" name="_next" value="https://hhijazi.vercel.app/thank-you" />
               <input type="hidden" name="_subject" value="New Contact Form Submission from Portfolio!" />
               <input type="hidden" name="_autoresponse" value="Thank you for contacting me! I'll get back to you soon." />
 
