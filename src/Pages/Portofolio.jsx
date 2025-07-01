@@ -386,12 +386,14 @@ export default function FullWidthTabs() {
                       data-aos-duration={index % 3 === 0 ? "1000" : index % 3 === 1 ? "1200" : "1000"}
                     >
                       <CardProject
-                        Img={project.Img}
                         Title={project.Title}
                         Description={project.Description}
                         Link={project.Link}
                         id={project.id}
                         TechStack={project.TechStack}
+                        stars={project.stars}
+                        forks={project.forks}
+                        language={project.language}
                       />
                     </div>
                   ))}

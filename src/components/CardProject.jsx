@@ -2,13 +2,8 @@ import React, { useState, memo } from "react";
 import { ExternalLink, Github, Eye, Star, GitFork } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const CardProject = memo(({ Img, Title, Description, Link: projectLink, id, TechStack = [] }) => {
+const CardProject = memo(({ Title, Description, Link: projectLink, id, TechStack = [], stars = 0, forks = 0, language = "" }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
-
-  const handleImageLoad = () => {
-    setImageLoaded(true);
-  };
 
   return (
     <div 
@@ -18,83 +13,42 @@ const CardProject = memo(({ Img, Title, Description, Link: projectLink, id, Tech
       onTouchStart={() => setIsHovered(true)}
       onTouchEnd={() => setIsHovered(false)}
     >
-      {/* Image Container with Overlay */}
-      <div className="relative h-40 xs:h-44 sm:h-48 overflow-hidden">
-        {!imageLoaded && (
-          <div className="absolute inset-0 bg-gray-800/50 flex items-center justify-center">
-            <div className="spinner"></div>
-          </div>
-        )}
-        
-        <img
-          src={Img}
-          alt={Title}
-          className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-110 ${
-            imageLoaded ? 'opacity-100' : 'opacity-0'
-          }`}
-          loading="lazy"
-          onLoad={handleImageLoad}
-          onError={() => setImageLoaded(true)}
-        />
-        
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-300" />
-        
-        {/* Hover Overlay with Actions */}
-        <div className={`absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center gap-4 transition-all duration-300 ${
-          isHovered ? 'opacity-100' : 'opacity-0'
-        }`}>
-          <Link
-            to={`/project/${id}`}
-            className="p-3 rounded-full bg-white/20 hover:bg-white/30 text-white transition-all duration-300 hover:scale-110"
-          >
-            <Eye className="w-5 h-5" />
-          </Link>
-          
-          {projectLink && (
-            <a
-              href={projectLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-3 rounded-full bg-white/20 hover:bg-white/30 text-white transition-all duration-300 hover:scale-110"
-            >
-              <ExternalLink className="w-5 h-5" />
-            </a>
-          )}
-          
-          <a
-            href={`https://github.com/hamzehhijazi/${Title.toLowerCase().replace(/\s+/g, '-')}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-3 rounded-full bg-white/20 hover:bg-white/30 text-white transition-all duration-300 hover:scale-110"
-          >
-            <Github className="w-5 h-5" />
-          </a>
-        </div>
-
-        {/* Project Stats (mockup for demo) */}
-        <div className="absolute top-4 right-4 flex gap-2">
-          <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-black/50 backdrop-blur-sm text-xs text-white">
-            <Star className="w-3 h-3" />
-            <span>{Math.floor(Math.random() * 50) + 10}</span>
-          </div>
-          <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-black/50 backdrop-blur-sm text-xs text-white">
-            <GitFork className="w-3 h-3" />
-            <span>{Math.floor(Math.random() * 20) + 5}</span>
-          </div>
-        </div>
-      </div>
-
       {/* Content */}
       <div className="p-4 xs:p-5 sm:p-6 space-y-3 xs:space-y-4">
-        {/* Title */}
-        <h3 className="text-base xs:text-lg sm:text-xl font-bold text-white group-hover:text-purple-300 transition-colors duration-300 line-clamp-2">
-          {Title}
-        </h3>
+        {/* Header with Title and Stats */}
+        <div className="flex items-start justify-between gap-4">
+          <h3 className="text-base xs:text-lg sm:text-xl font-bold text-white group-hover:text-purple-300 transition-colors duration-300 line-clamp-2 flex-1">
+            {Title}
+          </h3>
+          
+          {/* Project Stats */}
+          <div className="flex gap-2 shrink-0">
+            {stars > 0 && (
+              <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-black/30 backdrop-blur-sm text-xs text-gray-300">
+                <Star className="w-3 h-3" />
+                <span>{stars}</span>
+              </div>
+            )}
+            {forks > 0 && (
+              <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-black/30 backdrop-blur-sm text-xs text-gray-300">
+                <GitFork className="w-3 h-3" />
+                <span>{forks}</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Primary Language */}
+        {language && (
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full bg-gradient-to-r from-purple-500 to-blue-500"></div>
+            <span className="text-xs text-gray-400 font-medium">{language}</span>
+          </div>
+        )}
 
         {/* Description */}
         <p className="text-gray-400 text-xs xs:text-sm leading-relaxed line-clamp-3 group-hover:text-gray-300 transition-colors duration-300">
-          {Description}
+          {Description || "No description available"}
         </p>
 
         {/* Tech Stack */}
@@ -128,7 +82,7 @@ const CardProject = memo(({ Img, Title, Description, Link: projectLink, id, Tech
             className="text-xs xs:text-sm font-medium text-purple-400 hover:text-purple-300 transition-colors duration-300 flex items-center gap-1 xs:gap-2 min-h-touch"
           >
             View Details
-            <ExternalLink className="w-3 h-3 xs:w-4 xs:h-4" />
+            <Eye className="w-3 h-3 xs:w-4 xs:h-4" />
           </Link>
           
           <div className="flex gap-1 xs:gap-2">
@@ -144,7 +98,7 @@ const CardProject = memo(({ Img, Title, Description, Link: projectLink, id, Tech
               </a>
             )}
             <a
-              href={`https://github.com/hamzehhijazi/${Title.toLowerCase().replace(/\s+/g, '-')}`}
+              href={projectLink}
               target="_blank"
               rel="noopener noreferrer"
               className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-all duration-300 min-w-touch min-h-touch flex items-center justify-center"
