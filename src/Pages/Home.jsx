@@ -34,16 +34,16 @@ const StatusBadge = memo(() => (
 
 const MainTitle = memo(() => (
   <div className="space-y-2" data-aos="fade-up" data-aos-delay="600">
-    <h1 className="text-5xl sm:text-6xl md:text-6xl lg:text-6xl xl:text-7xl font-bold tracking-tight">
+    <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl font-bold tracking-tight leading-tight">
       <span className="relative inline-block">
-        <span className="absolute -inset-2 bg-gradient-to-r from-[#6366f1] to-[#a855f7] blur-2xl opacity-20"></span>
+        <span className="absolute -inset-1 sm:-inset-2 bg-gradient-to-r from-[#6366f1] to-[#a855f7] blur-xl sm:blur-2xl opacity-20"></span>
         <span className="relative bg-gradient-to-r from-white via-blue-100 to-purple-200 bg-clip-text text-transparent">
           Frontend
         </span>
       </span>
       <br />
-      <span className="relative inline-block mt-2">
-        <span className="absolute -inset-2 bg-gradient-to-r from-[#6366f1] to-[#a855f7] blur-2xl opacity-20"></span>
+      <span className="relative inline-block mt-1 sm:mt-2">
+        <span className="absolute -inset-1 sm:-inset-2 bg-gradient-to-r from-[#6366f1] to-[#a855f7] blur-xl sm:blur-2xl opacity-20"></span>
         <span className="relative bg-gradient-to-r from-[#6366f1] to-[#a855f7] bg-clip-text text-transparent">
           Developer
         </span>
@@ -189,14 +189,14 @@ const Home = () => {
           isLoaded ? "opacity-100" : "opacity-0"
         }`}
       >
-        <div className="container mx-auto px-[5%] sm:px-6 lg:px-[0%] min-h-screen">
-          <div className="flex flex-col lg:flex-row items-center justify-center h-screen md:justify-between gap-0 sm:gap-12 lg:gap-20">
+        <div className="container mx-auto px-4 xs:px-5 sm:px-6 lg:px-8 xl:px-0 min-h-screen">
+          <div className="flex flex-col lg:flex-row items-center justify-center min-h-screen py-8 sm:py-12 lg:py-0 gap-6 sm:gap-8 lg:gap-12 xl:gap-20">
             {/* Left Column - Enhanced Text Content */}
-            <div className="w-full lg:w-1/2 space-y-6 lg:space-y-8 order-1 lg:order-1 text-center lg:text-left">
+            <div className="w-full lg:w-1/2 space-y-4 sm:space-y-6 lg:space-y-8 order-2 lg:order-1 text-center lg:text-left">
               {/* Enhanced Greeting with gradient animation */}
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 <h1
-                  className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight"
+                  className="text-2xl xs:text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight"
                   data-aos="fade-right"
                   data-aos-duration="800"
                 >

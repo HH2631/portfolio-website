@@ -20,6 +20,35 @@ body {
 	scroll-behavior: smooth !important;
 }
 
+/* Mobile-specific optimizations */
+@media (max-width: 640px) {
+	html {
+		font-size: 14px;
+	}
+	
+	/* Reduce motion for mobile users who prefer it */
+	@media (prefers-reduced-motion: reduce) {
+		* {
+			animation-duration: 0.01ms !important;
+			animation-iteration-count: 1 !important;
+			transition-duration: 0.01ms !important;
+		}
+	}
+	
+	/* Optimize touch targets */
+	button, 
+	a, 
+	input, 
+	textarea {
+		touch-action: manipulation;
+	}
+}
+
+/* Improve touch scrolling on mobile */
+body {
+	-webkit-overflow-scrolling: touch;
+}
+
 @keyframes blob {
 	0%,
 	100% {
@@ -431,5 +460,43 @@ a:focus-visible {
   body {
     color: #000 !important;
     background: #fff !important;
+  }
+}
+
+/* Mobile-first responsive utilities */
+.touch-manipulation {
+  touch-action: manipulation;
+}
+
+/* Hide on mobile, show on desktop */
+@media (max-width: 640px) {
+  .hidden-mobile {
+    display: none !important;
+  }
+}
+
+/* Show on mobile, hide on desktop */
+@media (min-width: 641px) {
+  .mobile-only {
+    display: none !important;
+  }
+}
+
+/* Safe area padding for devices with notches */
+.safe-area-inset {
+  padding-top: env(safe-area-inset-top);
+  padding-right: env(safe-area-inset-right);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+}
+
+/* Optimize line clamp for mobile */
+@media (max-width: 640px) {
+  .line-clamp-3 {
+    -webkit-line-clamp: 2;
+  }
+  
+  .line-clamp-2 {
+    -webkit-line-clamp: 1;
   }
 }

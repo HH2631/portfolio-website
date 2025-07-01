@@ -12,12 +12,14 @@ const CardProject = memo(({ Img, Title, Description, Link: projectLink, id, Tech
 
   return (
     <div 
-      className="group relative bg-gray-900/30 backdrop-blur-lg rounded-2xl overflow-hidden border border-white/10 hover:border-white/20 transition-all duration-500 card-hover"
+      className="group relative bg-gray-900/30 backdrop-blur-lg rounded-xl sm:rounded-2xl overflow-hidden border border-white/10 hover:border-white/20 transition-all duration-500 card-hover"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onTouchStart={() => setIsHovered(true)}
+      onTouchEnd={() => setIsHovered(false)}
     >
       {/* Image Container with Overlay */}
-      <div className="relative h-48 overflow-hidden">
+      <div className="relative h-40 xs:h-44 sm:h-48 overflow-hidden">
         {!imageLoaded && (
           <div className="absolute inset-0 bg-gray-800/50 flex items-center justify-center">
             <div className="spinner"></div>
@@ -84,14 +86,14 @@ const CardProject = memo(({ Img, Title, Description, Link: projectLink, id, Tech
       </div>
 
       {/* Content */}
-      <div className="p-6 space-y-4">
+      <div className="p-4 xs:p-5 sm:p-6 space-y-3 xs:space-y-4">
         {/* Title */}
-        <h3 className="text-xl font-bold text-white group-hover:text-purple-300 transition-colors duration-300 line-clamp-2">
+        <h3 className="text-base xs:text-lg sm:text-xl font-bold text-white group-hover:text-purple-300 transition-colors duration-300 line-clamp-2">
           {Title}
         </h3>
 
         {/* Description */}
-        <p className="text-gray-400 text-sm leading-relaxed line-clamp-3 group-hover:text-gray-300 transition-colors duration-300">
+        <p className="text-gray-400 text-xs xs:text-sm leading-relaxed line-clamp-3 group-hover:text-gray-300 transition-colors duration-300">
           {Description}
         </p>
 
@@ -120,35 +122,35 @@ const CardProject = memo(({ Img, Title, Description, Link: projectLink, id, Tech
         )}
 
         {/* Action Footer */}
-        <div className="flex items-center justify-between pt-4 border-t border-white/10">
+        <div className="flex items-center justify-between pt-3 xs:pt-4 border-t border-white/10">
           <Link
             to={`/project/${id}`}
-            className="text-sm font-medium text-purple-400 hover:text-purple-300 transition-colors duration-300 flex items-center gap-2"
+            className="text-xs xs:text-sm font-medium text-purple-400 hover:text-purple-300 transition-colors duration-300 flex items-center gap-1 xs:gap-2 min-h-touch"
           >
             View Details
-            <ExternalLink className="w-4 h-4" />
+            <ExternalLink className="w-3 h-3 xs:w-4 xs:h-4" />
           </Link>
           
-          <div className="flex gap-2">
+          <div className="flex gap-1 xs:gap-2">
             {projectLink && (
               <a
                 href={projectLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-all duration-300"
+                className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-all duration-300 min-w-touch min-h-touch flex items-center justify-center"
                 title="Live Demo"
               >
-                <ExternalLink className="w-4 h-4" />
+                <ExternalLink className="w-3 h-3 xs:w-4 xs:h-4" />
               </a>
             )}
             <a
               href={`https://github.com/hamzehhijazi/${Title.toLowerCase().replace(/\s+/g, '-')}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-all duration-300"
+              className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-all duration-300 min-w-touch min-h-touch flex items-center justify-center"
               title="Source Code"
             >
-              <Github className="w-4 h-4" />
+              <Github className="w-3 h-3 xs:w-4 xs:h-4" />
             </a>
           </div>
         </div>
