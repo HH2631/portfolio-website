@@ -14,7 +14,8 @@ import TechStackIcon from "../components/TechStackIcon";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import Certificate from "../components/Certificate";
-import { Code, Award, Boxes } from "lucide-react";
+import { Code, Award, Boxes, Github, Loader2 } from "lucide-react";
+import { getGitHubRepositories, getGitHubProfile, GITHUB_USERNAME } from "../services/github";
 
 // Separate ShowMore/ShowLess button component
 const ToggleButton = ({ onClick, isShowingMore }) => (
@@ -69,6 +70,39 @@ const ToggleButton = ({ onClick, isShowingMore }) => (
   </button>
 );
 
+// Loading component for projects
+const ProjectsLoading = () => (
+  <div className="flex flex-col items-center justify-center py-16 space-y-4">
+    <Loader2 className="h-8 w-8 animate-spin text-purple-500" />
+    <p className="text-slate-400 text-lg">Loading projects from GitHub...</p>
+    <p className="text-slate-500 text-sm">Fetching repositories from {GITHUB_USERNAME}</p>
+  </div>
+);
+
+// Empty state component
+const NoProjectsMessage = () => (
+  <div className="flex flex-col items-center justify-center py-16 space-y-4">
+    <Github className="h-16 w-16 text-slate-600" />
+    <div className="text-center space-y-2">
+      <h3 className="text-xl font-semibold text-slate-300">No Public Repositories Found</h3>
+      <p className="text-slate-400 max-w-md">
+        Projects will appear here automatically when you make your repositories public on GitHub.
+      </p>
+      <div className="mt-4">
+        <a 
+          href={`https://github.com/${GITHUB_USERNAME}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors duration-200"
+        >
+          <Github className="h-4 w-4" />
+          View GitHub Profile
+        </a>
+      </div>
+    </div>
+  </div>
+);
+
 function TabPanel({ children, value, index, ...other }) {
   return (
     <div
@@ -115,106 +149,6 @@ const techStacks = [
   { icon: "SweetAlert.svg", language: "SweetAlert2" },
 ];
 
-// World-class projects showcasing real development skills
-const realProjectsData = [
-  {
-    id: 1,
-    Title: "AI-Powered Portfolio Platform",
-    Description: "A modern, responsive portfolio website built with React, featuring AI-powered interactions, real-time comments, and dynamic content management. Includes advanced animations, Firebase integration, and optimized performance.",
-    Img: "/Photo.png",
-    Link: "https://hhijazi.vercel.app",
-    TechStack: ["React", "Firebase", "Tailwind CSS", "JavaScript", "Vite"],
-    Features: [
-      "AI-powered comment system with image uploads",
-      "Real-time data synchronization",
-      "Advanced CSS animations and micro-interactions",
-      "Responsive design across all devices",
-      "SEO optimized with meta tags",
-      "Performance optimized with lazy loading"
-    ]
-  },
-  {
-    id: 2,
-    Title: "Cybersecurity CTF Challenge Platform",
-    Description: "Built during NCSC Cyber Security CTF participation. A comprehensive platform featuring multiple security challenges, real-time scoring, and educational cybersecurity content with interactive learning modules.",
-    Img: "/NCSC CTF.png",
-    Link: "https://github.com/hamzehhijazi/ctf-platform",
-    TechStack: ["Node.js", "Express", "MongoDB", "React", "Socket.io"],
-    Features: [
-      "Real-time challenge scoring system",
-      "Multi-category security challenges",
-      "Educational cybersecurity modules",
-      "Team collaboration features",
-      "Admin dashboard for challenge management",
-      "Secure authentication system"
-    ]
-  },
-  {
-    id: 3,
-    Title: "AI Industrial Engineering Solutions",
-    Description: "Advanced AI application developed during Industrial Engineering certification. Features machine learning algorithms for process optimization, predictive analytics, and automated decision-making systems.",
-    Img: "/AI iec 1.jpeg",
-    Link: "https://github.com/hamzehhijazi/ai-industrial-solutions",
-    TechStack: ["Python", "TensorFlow", "React", "Flask", "PostgreSQL"],
-    Features: [
-      "Machine learning process optimization",
-      "Predictive maintenance algorithms",
-      "Real-time data visualization",
-      "Automated reporting system",
-      "Performance analytics dashboard",
-      "Industrial IoT integration"
-    ]
-  },
-  {
-    id: 4,
-    Title: "Mental Health Support Platform",
-    Description: "A comprehensive mental health platform developed using insights from Mind Matters certification. Features mood tracking, AI-powered recommendations, and community support systems with privacy-first design.",
-    Img: "/mind matters.jpeg",
-    Link: "https://github.com/hamzehhijazi/mental-health-platform",
-    TechStack: ["React Native", "Node.js", "MongoDB", "Express", "Socket.io"],
-    Features: [
-      "Mood tracking and analytics",
-      "AI-powered mental health insights",
-      "Anonymous community support",
-      "Guided meditation and exercises",
-      "Crisis intervention features",
-      "Privacy-encrypted data storage"
-    ]
-  },
-  {
-    id: 5,
-    Title: "International Science Fair Project",
-    Description: "Award-winning project from International Science and Engineering Fair (ISEF). An innovative research platform combining data science, environmental monitoring, and real-time analytics for climate change research.",
-    Img: "/isef.jpeg",
-    Link: "https://github.com/hamzehhijazi/isef-climate-research",
-    TechStack: ["Python", "Django", "D3.js", "PostgreSQL", "Docker"],
-    Features: [
-      "Real-time environmental data collection",
-      "Advanced statistical analysis",
-      "Interactive data visualizations",
-      "Research collaboration tools",
-      "Academic paper generation",
-      "Open science data sharing"
-    ]
-  },
-  {
-    id: 6,
-    Title: "Professional Development Tracker",
-    Description: "A sophisticated learning management system built during Pearson professional development courses. Features skill tracking, course management, and AI-powered learning path recommendations.",
-    Img: "/pearson1.jpeg",
-    Link: "https://github.com/hamzehhijazi/professional-dev-tracker",
-    TechStack: ["Vue.js", "Laravel", "MySQL", "Redis", "Docker"],
-    Features: [
-      "Skill progression tracking",
-      "AI-powered learning recommendations",
-      "Course completion analytics",
-      "Certification management",
-      "Social learning features",
-      "Career pathway planning"
-    ]
-  }
-];
-
 // Static certificate data using your certificates
 const certificatesData = [
   {
@@ -241,7 +175,6 @@ const certificatesData = [
     title: "Mind Matters",
     description: "Mental Health and Psychology Certificate"
   },
-
   {
     id: 5,
     Img: "/isef.jpeg",
@@ -253,10 +186,12 @@ const certificatesData = [
 export default function FullWidthTabs() {
   const theme = useTheme();
   const [value, setValue] = useState(0);
-  const [projects, setProjects] = useState(realProjectsData); // Use real projects
+  const [projects, setProjects] = useState([]);
   const [certificates, setCertificates] = useState(certificatesData);
   const [showAllProjects, setShowAllProjects] = useState(false);
   const [showAllCertificates, setShowAllCertificates] = useState(false);
+  const [isLoadingProjects, setIsLoadingProjects] = useState(true);
+  const [gitHubProfile, setGitHubProfile] = useState(null);
   const isMobile = window.innerWidth < 768;
   const initialItems = isMobile ? 4 : 6;
 
@@ -267,11 +202,46 @@ export default function FullWidthTabs() {
     });
   }, []);
 
-  // Remove Firebase fetch and use static data
+  // Fetch GitHub repositories on component mount
   useEffect(() => {
-    // Store projects in localStorage for consistency
-    localStorage.setItem("projects", JSON.stringify(realProjectsData));
-    localStorage.setItem("certificates", JSON.stringify(certificatesData));
+    const fetchGitHubData = async () => {
+      setIsLoadingProjects(true);
+      
+      try {
+        // Fetch repositories and profile in parallel
+        const [repositories, profile] = await Promise.all([
+          getGitHubRepositories(),
+          getGitHubProfile()
+        ]);
+        
+        setProjects(repositories);
+        setGitHubProfile(profile);
+        
+        // Store in localStorage for offline access
+        if (repositories.length > 0) {
+          localStorage.setItem("github_projects", JSON.stringify(repositories));
+          localStorage.setItem("github_profile", JSON.stringify(profile));
+        }
+        
+      } catch (error) {
+        console.error('Error fetching GitHub data:', error);
+        
+        // Try to load from localStorage as fallback
+        const cachedProjects = localStorage.getItem("github_projects");
+        const cachedProfile = localStorage.getItem("github_profile");
+        
+        if (cachedProjects) {
+          setProjects(JSON.parse(cachedProjects));
+        }
+        if (cachedProfile) {
+          setGitHubProfile(JSON.parse(cachedProfile));
+        }
+      } finally {
+        setIsLoadingProjects(false);
+      }
+    };
+
+    fetchGitHubData();
   }, []);
 
   const handleChange = (event, newValue) => {
@@ -405,24 +375,30 @@ export default function FullWidthTabs() {
         >
           <TabPanel value={value} index={0} dir={theme.direction}>
             <div className="container mx-auto flex justify-center items-center overflow-hidden">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
-                {displayedProjects.map((project, index) => (
-                  <div
-                    key={project.id || index}
-                    data-aos={index % 3 === 0 ? "fade-up-right" : index % 3 === 1 ? "fade-up" : "fade-up-left"}
-                    data-aos-duration={index % 3 === 0 ? "1000" : index % 3 === 1 ? "1200" : "1000"}
-                  >
-                    <CardProject
-                      Img={project.Img}
-                      Title={project.Title}
-                      Description={project.Description}
-                      Link={project.Link}
-                      id={project.id}
-                      TechStack={project.TechStack}
-                    />
-                  </div>
-                ))}
-              </div>
+              {isLoadingProjects ? (
+                <ProjectsLoading />
+              ) : projects.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
+                  {displayedProjects.map((project, index) => (
+                    <div
+                      key={project.id || index}
+                      data-aos={index % 3 === 0 ? "fade-up-right" : index % 3 === 1 ? "fade-up" : "fade-up-left"}
+                      data-aos-duration={index % 3 === 0 ? "1000" : index % 3 === 1 ? "1200" : "1000"}
+                    >
+                      <CardProject
+                        Img={project.Img}
+                        Title={project.Title}
+                        Description={project.Description}
+                        Link={project.Link}
+                        id={project.id}
+                        TechStack={project.TechStack}
+                      />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <NoProjectsMessage />
+              )}
             </div>
             {projects.length > initialItems && (
               <div className="mt-4 sm:mt-6 w-full flex justify-start">
