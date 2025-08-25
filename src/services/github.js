@@ -4,7 +4,6 @@
 const GITHUB_USERNAME = 'HH2631';
 const GITHUB_API_BASE = 'https://api.github.com';
 
-// Cache for API responses
 let repositoriesCache = null;
 let cacheTimestamp = null;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes

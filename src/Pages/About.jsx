@@ -234,7 +234,7 @@ const AboutDescription = memo(() => (
         </p>
         
         <p>
-          With <span className="text-blue-400 font-semibold">3 years of hands-on experience</span>, I specialize in building 
+          With <span className="text-blue-400 font-semibold">4 years of hands-on experience</span>, I specialize in building 
           modern, responsive web applications using cutting-edge technologies. My expertise includes React.js, Node.js, 
           Python, and various cloud platforms, always with a focus on user experience and performance optimization.
         </p>
@@ -301,7 +301,7 @@ const AboutPage = () => {
     // Use fixed certificate count instead of localStorage
     const certificateCount = 5; // Total number of certificates (updated count)
 
-    const experience = 3;
+    const experience = 4;
 
     return {
       totalProjects: storedProjects.length,

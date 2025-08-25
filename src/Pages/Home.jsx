@@ -270,7 +270,7 @@ const Home = () => {
                 {/* Achievement highlights */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
                   <div className="glass-dark rounded-lg p-3 text-center group hover:scale-105 transition-transform">
-                    <div className="text-lg font-bold text-blue-400">3</div>
+                    <div className="text-lg font-bold text-blue-400">4</div>
                     <div className="text-xs text-gray-500">Years Experience</div>
                   </div>
                   <div className="glass-dark rounded-lg p-3 text-center group hover:scale-105 transition-transform">
