@@ -13,7 +13,7 @@ const socialLinks = [
     displayName: "Let's Connect",
     subText: "on LinkedIn",
     icon: Linkedin,
-    url: "https://www.linkedin.com/in/hamzehhijazi/",
+    url: "https://www.linkedin.com/in/hamzeh-hijazi-5a0918199/",
     color: "#0A66C2",
     gradient: "from-[#0A66C2] to-[#0077B5]",
     isPrimary: true
@@ -39,9 +39,9 @@ const socialLinks = [
   {
     name: "GitHub",
     displayName: "Github",
-    subText: "@HamzehHijazi",
+    subText: "@HH2631",
     icon: Github,
-    url: "https://github.com/hamzehhijazi",
+    url: "https://github.com/HH2631",
     color: "#ffffff",
     gradient: "from-[#333] to-[#24292e]"
   },
