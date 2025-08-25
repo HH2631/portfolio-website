@@ -21,9 +21,9 @@ const socialLinks = [
   {
     name: "Instagram",
     displayName: "Instagram",
-    subText: "@hamzehhijazi",
+    subText: "@Hamzeh_hijazi",
     icon: Instagram,
-    url: "https://www.instagram.com/hamzehhijazi/",
+    url: "https://www.instagram.com/Hamzeh_hijazi/",
     color: "#E4405F",
     gradient: "from-[#833AB4] via-[#E4405F] to-[#FCAF45]"
   },

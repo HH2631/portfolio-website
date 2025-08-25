@@ -99,7 +99,7 @@ const TECH_STACK = ["React", "Javascript", "Node.js", "Tailwind"];
 const SOCIAL_LINKS = [
   { icon: Github, link: "https://github.com/hamzehhijazi" },
   { icon: Linkedin, link: "https://www.linkedin.com/in/hamzehhijazi/" },
-  { icon: Instagram, link: "https://www.instagram.com/hamzeh.hijazi/" },
+  { icon: Instagram, link: "https://www.instagram.com/Hamzeh_hijazi/" },
 ];
 
 // Enhanced hero description with dynamic typing effect
