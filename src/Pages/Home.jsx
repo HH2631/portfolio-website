@@ -98,7 +98,7 @@ const WORDS = ["Frontend Developer", "Web Developer", "React Specialist"];
 const TECH_STACK = ["React", "Javascript", "Node.js", "Tailwind"];
 const SOCIAL_LINKS = [
   { icon: Github, link: "https://github.com/HH2631" },
-  { icon: Linkedin, link: "https://www.linkedin.com/in/hamzeh-hijazi-5a0918199/" },
+  { icon: Linkedin, link: "https://www.linkedin.com/in/hbhijazi" },
   { icon: Instagram, link: "https://www.instagram.com/Hamzeh_hijazi/" },
 ];
 
