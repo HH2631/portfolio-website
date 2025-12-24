@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Share2, User, Mail, MessageSquare, Send } from "lucide-react";
+import { Share2, User, Mail, MessageSquare, Send, FileText } from "lucide-react";
 import { Link } from "react-router-dom";
 import SocialLinks from "../components/SocialLinks";
 import Komentar from "../components/Commentar";
@@ -221,6 +221,21 @@ const ContactPage = () => {
                 {isSubmitting ? 'Sending...' : 'Send Message'}
               </button>
             </form>
+
+            <div className="mt-6 flex justify-center">
+              <a
+                href="/CV-final.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                download="CV-final.pdf"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#6366f1] to-[#a855f7] text-white font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-[#6366f1]/25 group"
+                data-aos="fade-up"
+                data-aos-delay="500"
+              >
+                <FileText className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+                <span>Download CV</span>
+              </a>
+            </div>
 
             <div className="mt-10 pt-6 border-t border-white/10 flex justify-center space-x-6">
               <SocialLinks />

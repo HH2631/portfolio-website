@@ -265,10 +265,11 @@ const AboutDescription = memo(() => (
     {/* Action buttons with enhanced styling */}
     <div className="flex flex-col lg:flex-row items-center lg:items-start gap-4 lg:gap-4 lg:px-0 w-full">
       <a
-        href="/resume.pdf"
+        href="/CV-final.pdf"
         className="w-full lg:w-auto"
         target="_blank"
         rel="noopener noreferrer"
+        download="CV-final.pdf"
       >
         <button
           data-aos="fade-up"
