@@ -1,253 +1,175 @@
-import React, { useState, useEffect } from "react";
-import { Share2, User, Mail, MessageSquare, Send, FileText } from "lucide-react";
-import { Link } from "react-router-dom";
-import SocialLinks from "../components/SocialLinks";
-import Komentar from "../components/Commentar";
-import Swal from "sweetalert2";
-import AOS from "aos";
-import "aos/dist/aos.css";
+import { useState, useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Share2, User, Mail, MessageSquare, Send, FileText } from 'lucide-react';
+import SocialLinks from '../components/ui/SocialLinks';
+import Komentar from '../components/Commentar';
+import Swal from 'sweetalert2';
+import GlassCard from '../components/ui/GlassCard';
+import GradientText from '../components/ui/GradientText';
+import MagneticButton from '../components/animations/MagneticButton';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const ContactPage = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const sectionRef = useRef(null);
+  const headerRef = useRef(null);
+  const formRef = useRef(null);
+  const commentRef = useRef(null);
 
   useEffect(() => {
-    AOS.init({
-      once: false,
-    });
+    const ctx = gsap.context(() => {
+      gsap.fromTo(headerRef.current, { y: 40, opacity: 0 }, {
+        y: 0, opacity: 1, duration: 0.8, ease: 'power3.out',
+        scrollTrigger: { trigger: headerRef.current, start: 'top 85%', once: true },
+      });
+      gsap.fromTo(formRef.current, { y: 50, opacity: 0 }, {
+        y: 0, opacity: 1, duration: 0.8, delay: 0.15, ease: 'power3.out',
+        scrollTrigger: { trigger: formRef.current, start: 'top 85%', once: true },
+      });
+      gsap.fromTo(commentRef.current, { y: 50, opacity: 0 }, {
+        y: 0, opacity: 1, duration: 0.8, delay: 0.3, ease: 'power3.out',
+        scrollTrigger: { trigger: commentRef.current, start: 'top 85%', once: true },
+      });
+    }, sectionRef);
+    return () => ctx.revert();
   }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Validate form data
+
     if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
-      Swal.fire({
-        title: 'Missing Information',
-        text: 'Please fill in all required fields.',
-        icon: 'error',
-        confirmButtonColor: '#6366f1'
-      });
+      Swal.fire({ title: 'Missing Information', text: 'Please fill in all fields.', icon: 'error', confirmButtonColor: '#6C63FF', background: '#12121A', color: '#FAFAFA' });
       setIsSubmitting(false);
       return;
     }
-    
+
     try {
-      // Show loading message
-      Swal.fire({
-        title: 'Sending Message...',
-        html: 'Please wait while we send your message',
-        allowOutsideClick: false,
-        didOpen: () => {
-          Swal.showLoading();
-        }
-      });
-      
-      // Create form data
+      Swal.fire({ title: 'Sending...', html: 'Delivering your message', allowOutsideClick: false, background: '#12121A', color: '#FAFAFA', didOpen: () => Swal.showLoading() });
       const form = e.target;
-      const formData = new FormData(form);
-      
-      // Submit to FormSubmit
-      const response = await fetch(form.action, {
-        method: 'POST',
-        body: formData
-      });
-      
-      if (response.ok) {
-        // Show success message
-        Swal.fire({
-          title: 'Message Sent!',
-          text: 'Thank you for your message. I\'ll get back to you soon!',
-          icon: 'success',
-          confirmButtonColor: '#6366f1',
-          timer: 3000,
-          timerProgressBar: true
-        });
-        
-        // Reset form
-        setFormData({ name: "", email: "", message: "" });
+      const fd = new FormData(form);
+      const res = await fetch(form.action, { method: 'POST', body: fd });
+      if (res.ok) {
+        Swal.fire({ title: 'Sent!', text: 'Thanks for reaching out. I\'ll reply soon.', icon: 'success', confirmButtonColor: '#6C63FF', timer: 3000, timerProgressBar: true, background: '#12121A', color: '#FAFAFA' });
+        setFormData({ name: '', email: '', message: '' });
       } else {
-        throw new Error('Failed to send message');
+        throw new Error('Failed');
       }
-    } catch (error) {
-      console.error('Form submission error:', error);
-      Swal.fire({
-        title: 'Error',
-        text: 'There was an error sending your message. Please try again or contact me directly.',
-        icon: 'error',
-        confirmButtonColor: '#6366f1'
-      });
+    } catch {
+      Swal.fire({ title: 'Error', text: 'Something went wrong. Please try again.', icon: 'error', confirmButtonColor: '#6C63FF', background: '#12121A', color: '#FAFAFA' });
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  const inputClasses = 'w-full p-3.5 pl-11 rounded-xl bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.06)] text-white placeholder-[#8B8B9E] text-sm focus:outline-none focus:border-[rgba(108,99,255,0.4)] focus:shadow-[0_0_20px_rgba(108,99,255,0.08)] transition-all duration-300';
+  const iconClasses = 'absolute left-3.5 top-3.5 w-4 h-4 text-[#8B8B9E] group-focus-within:text-[#6C63FF] transition-colors duration-300';
+
   return (
-    <>
-      <div className="text-center pt-8 sm:pt-12 md:pt-16 lg:pt-[5%] mb-6 sm:mb-8 md:mb-10 px-4 xs:px-5 sm:px-6 md:px-0">
-        <h2
-          data-aos="fade-down"
-          data-aos-duration="1000"
-          className="inline-block text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-center mx-auto text-transparent bg-clip-text bg-gradient-to-r from-[#6366f1] to-[#a855f7]"
-        >
-          <span
-            style={{
-              color: "#6366f1",
-              backgroundImage:
-                "linear-gradient(45deg, #6366f1 10%, #a855f7 93%)",
-              WebkitBackgroundClip: "text",
-              backgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-            }}
-          >
-            Contact Me
-          </span>
-        </h2>
-        <p
-          data-aos="fade-up"
-          data-aos-duration="1100"
-          className="text-slate-400 max-w-2xl mx-auto text-xs xs:text-sm sm:text-base mt-2 px-2"
-        >
-          Got a question? Send me a message, and I'll get back to you soon.
-        </p>
-      </div>
+    <section ref={sectionRef} id="Contact" className="relative py-24 lg:py-32 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
 
-      <div
-        className="h-auto py-6 sm:py-8 md:py-10 flex items-center justify-center px-4 xs:px-5 sm:px-6 md:px-8 lg:px-0"
-        id="Contact"
-      >
-        <div className="container px-0 sm:px-[1%] grid grid-cols-1 lg:grid-cols-[45%_55%] 2xl:grid-cols-[35%_65%] gap-6 sm:gap-8 md:gap-10 lg:gap-12">
-          <div
-            data-aos="fade-right"
-            data-aos-duration="1200"
-            className="bg-white/5 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-2xl p-4 xs:p-5 sm:p-6 md:p-8 lg:p-10 py-6 xs:py-8 sm:py-10 transform transition-all duration-300 hover:shadow-[#6366f1]/10"
-          >
-            <div className="flex justify-between items-start mb-6 sm:mb-8">
-              <div className="flex-1">
-                <h2 className="text-xl xs:text-2xl sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-3 text-transparent bg-clip-text bg-gradient-to-r from-[#6366f1] to-[#a855f7]">
-                  Get in Touch
-                </h2>
-                <p className="text-gray-400 text-xs xs:text-sm sm:text-base pr-2">
-                  Have something to discuss? Send me a message and let's talk.
-                </p>
+        {/* Header */}
+        <div ref={headerRef} className="text-center mb-12" style={{ opacity: 0 }}>
+          <p className="text-sm uppercase tracking-[0.2em] text-[#6C63FF] mb-3 font-medium">Contact</p>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold">
+            <GradientText animate>Get In Touch</GradientText>
+          </h2>
+          <p className="mt-4 text-[#8B8B9E] max-w-lg mx-auto">
+            Have a project in mind or just want to say hello? I'd love to hear from you.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-[45%_55%] gap-8 lg:gap-12">
+
+          {/* Left: Form + Social */}
+          <div ref={formRef} style={{ opacity: 0 }}>
+            <GlassCard className="p-6 sm:p-8">
+              <div className="flex justify-between items-start mb-8">
+                <div>
+                  <h3 className="text-xl font-semibold text-white mb-1">Send a Message</h3>
+                  <p className="text-sm text-[#8B8B9E]">I'll get back to you as soon as possible.</p>
+                </div>
+                <Share2 className="w-5 h-5 text-[#6C63FF] opacity-40" />
               </div>
-              <Share2 className="w-6 h-6 xs:w-8 xs:h-8 sm:w-10 sm:h-10 text-[#6366f1] opacity-50 flex-shrink-0" />
-            </div>
 
-            <form 
-              action="https://formsubmit.co/hhijazi@appifylabs.pro"
-              method="POST"
-              onSubmit={handleSubmit}
-              className="space-y-6"
-            >
-              {/* FormSubmit Configuration */}
-              <input type="hidden" name="_template" value="table" />
-              <input type="hidden" name="_captcha" value="false" />
-              <input type="hidden" name="_next" value="https://hhijazi.vercel.app/thank-you" />
-              <input type="hidden" name="_subject" value="New Contact Form Submission from Portfolio!" />
-              <input type="hidden" name="_autoresponse" value="Thank you for contacting me! I'll get back to you soon." />
-
-              <div
-                data-aos="fade-up"
-                data-aos-delay="100"
-                className="relative group"
+              <form
+                action="https://formsubmit.co/hhijazi@appifylabs.pro"
+                method="POST"
+                onSubmit={handleSubmit}
+                className="space-y-5"
               >
-                <User className="absolute left-3 xs:left-4 top-3 xs:top-4 w-4 h-4 xs:w-5 xs:h-5 text-gray-400 group-focus-within:text-[#6366f1] transition-colors" />
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="Your Name"
-                  value={formData.name}
-                  onChange={handleChange}
+                <input type="hidden" name="_template" value="table" />
+                <input type="hidden" name="_captcha" value="false" />
+                <input type="hidden" name="_next" value="https://hhijazi.vercel.app/thank-you" />
+                <input type="hidden" name="_subject" value="New Contact Form Submission from Portfolio!" />
+                <input type="hidden" name="_autoresponse" value="Thank you for contacting me! I'll get back to you soon." />
+
+                <div className="relative group">
+                  <User className={iconClasses} />
+                  <input type="text" name="name" placeholder="Your Name" value={formData.name} onChange={handleChange} disabled={isSubmitting} className={inputClasses} required />
+                </div>
+                <div className="relative group">
+                  <Mail className={iconClasses} />
+                  <input type="email" name="email" placeholder="Your Email" value={formData.email} onChange={handleChange} disabled={isSubmitting} className={inputClasses} required />
+                </div>
+                <div className="relative group">
+                  <MessageSquare className={iconClasses} />
+                  <textarea name="message" placeholder="Your Message" value={formData.message} onChange={handleChange} disabled={isSubmitting} className={`${inputClasses} resize-none h-28`} required />
+                </div>
+
+                <button
+                  type="submit"
                   disabled={isSubmitting}
-                  className="w-full p-3 xs:p-4 pl-10 xs:pl-12 bg-white/10 rounded-lg xs:rounded-xl border border-white/20 placeholder-gray-500 text-white text-sm xs:text-base focus:outline-none focus:ring-2 focus:ring-[#6366f1]/30 transition-all duration-300 hover:border-[#6366f1]/30 disabled:opacity-50 min-h-touch"
-                  required
-                />
-              </div>
-              <div
-                data-aos="fade-up"
-                data-aos-delay="200"
-                className="relative group"
-              >
-                <Mail className="absolute left-3 xs:left-4 top-3 xs:top-4 w-4 h-4 xs:w-5 xs:h-5 text-gray-400 group-focus-within:text-[#6366f1] transition-colors" />
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Your Email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  disabled={isSubmitting}
-                  className="w-full p-3 xs:p-4 pl-10 xs:pl-12 bg-white/10 rounded-lg xs:rounded-xl border border-white/20 placeholder-gray-500 text-white text-sm xs:text-base focus:outline-none focus:ring-2 focus:ring-[#6366f1]/30 transition-all duration-300 hover:border-[#6366f1]/30 disabled:opacity-50 min-h-touch"
-                  required
-                />
-              </div>
-              <div
-                data-aos="fade-up"
-                data-aos-delay="300"
-                className="relative group"
-              >
-                <MessageSquare className="absolute left-3 xs:left-4 top-3 xs:top-4 w-4 h-4 xs:w-5 xs:h-5 text-gray-400 group-focus-within:text-[#6366f1] transition-colors" />
-                <textarea
-                  name="message"
-                  placeholder="Your Message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  disabled={isSubmitting}
-                  className="w-full resize-none p-3 xs:p-4 pl-10 xs:pl-12 bg-white/10 rounded-lg xs:rounded-xl border border-white/20 placeholder-gray-500 text-white text-sm xs:text-base focus:outline-none focus:ring-2 focus:ring-[#6366f1]/30 transition-all duration-300 hover:border-[#6366f1]/30 h-24 xs:h-28 sm:h-32 md:h-[9.9rem] disabled:opacity-50"
-                  required
-                />
-              </div>
-              <button
-                data-aos="fade-up"
-                data-aos-delay="400"
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-gradient-to-r from-[#6366f1] to-[#a855f7] text-white py-3 xs:py-4 rounded-lg xs:rounded-xl font-semibold text-sm xs:text-base transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-[#6366f1]/20 active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 min-h-touch"
-              >
-                <Send className="w-4 h-4 xs:w-5 xs:h-5" />
-                {isSubmitting ? 'Sending...' : 'Send Message'}
-              </button>
-            </form>
+                  className="w-full py-3.5 rounded-xl font-semibold text-sm text-white transition-all duration-300 hover:shadow-[0_0_30px_rgba(108,99,255,0.25)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  style={{ background: 'linear-gradient(135deg, #6C63FF, #00D4FF)' }}
+                >
+                  <Send className="w-4 h-4" />
+                  {isSubmitting ? 'Sending...' : 'Send Message'}
+                </button>
+              </form>
 
-            <div className="mt-6 flex justify-center">
-              <a
-                href="/CV-final.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                download="CV-final.pdf"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#6366f1] to-[#a855f7] text-white font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-[#6366f1]/25 group"
-                data-aos="fade-up"
-                data-aos-delay="500"
-              >
-                <FileText className="w-5 h-5 group-hover:rotate-12 transition-transform" />
-                <span>Download CV</span>
-              </a>
-            </div>
+              {/* Download CV */}
+              <div className="mt-6 flex justify-center">
+                <MagneticButton
+                  as="a"
+                  href="/CV-final.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  download="CV-final.pdf"
+                  strength={0.2}
+                >
+                  <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium border border-[rgba(108,99,255,0.25)] text-white hover:bg-[rgba(108,99,255,0.08)] hover:border-[rgba(108,99,255,0.5)] transition-all duration-300">
+                    <FileText className="w-4 h-4" />
+                    Download CV
+                  </span>
+                </MagneticButton>
+              </div>
 
-            <div className="mt-10 pt-6 border-t border-white/10 flex justify-center space-x-6">
-              <SocialLinks />
-            </div>
+              {/* Social links */}
+              <div className="mt-8 pt-6 border-t border-[rgba(255,255,255,0.04)]">
+                <SocialLinks />
+              </div>
+            </GlassCard>
           </div>
 
-          <div className="bg-white/5 backdrop-blur-xl rounded-2xl sm:rounded-3xl p-3 xs:p-4 sm:p-6 md:p-8 lg:p-10 py-4 xs:py-5 sm:py-6 md:py-8 shadow-2xl transform transition-all duration-300 hover:shadow-[#6366f1]/10">
-            <Komentar />
+          {/* Right: Comments */}
+          <div ref={commentRef} style={{ opacity: 0 }}>
+            <GlassCard className="p-6 sm:p-8 h-full">
+              <Komentar />
+            </GlassCard>
           </div>
         </div>
       </div>
-    </>
+    </section>
   );
 };
 

@@ -1,201 +1,193 @@
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Code2, Github, Globe, User } from "lucide-react";
-import AOS from "aos";
-import "aos/dist/aos.css";
+import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
-const TypewriterEffect = ({ text }) => {
-  const [displayText, setDisplayText] = useState("");
+const WELCOME_DURATION = 3500;
+
+function TerminalTypewriter({ text, speed = 70, delay = 600 }) {
+  const [displayed, setDisplayed] = useState('');
+  const [showCursor, setShowCursor] = useState(true);
 
   useEffect(() => {
-    let index = 0;
-    const timer = setInterval(() => {
-      if (index <= text.length) {
-        setDisplayText(text.slice(0, index));
-        index++;
-      } else {
-        clearInterval(timer);
-      }
-    }, 260);
+    const timeout = setTimeout(() => {
+      let i = 0;
+      const interval = setInterval(() => {
+        if (i <= text.length) {
+          setDisplayed(text.slice(0, i));
+          i++;
+        } else {
+          clearInterval(interval);
+        }
+      }, speed);
+      return () => clearInterval(interval);
+    }, delay);
+    return () => clearTimeout(timeout);
+  }, [text, speed, delay]);
 
-    return () => clearInterval(timer);
-  }, [text]);
+  useEffect(() => {
+    const blink = setInterval(() => setShowCursor((v) => !v), 530);
+    return () => clearInterval(blink);
+  }, []);
 
   return (
-    <span className="inline-block">
-      {displayText}
-      <span className="animate-pulse">|</span>
+    <span className="font-mono text-lg sm:text-xl md:text-2xl text-[#8B8B9E]">
+      <span className="text-[#00D4FF]">~</span>
+      <span className="text-[#6C63FF] mx-2">&gt;</span>
+      <span className="text-[#FAFAFA]">{displayed}</span>
+      <span className={`text-[#6C63FF] ${showCursor ? 'opacity-100' : 'opacity-0'}`}>|</span>
     </span>
   );
-};
+}
 
-const BackgroundEffect = () => (
-  <div className="absolute inset-0 overflow-hidden">
-    <div className="absolute inset-0 bg-gradient-to-r from-indigo-600/20 to-purple-600/20 blur-3xl animate-pulse" />
-    <div className="absolute inset-0 bg-gradient-to-tr from-indigo-600/10 via-transparent to-purple-600/10 blur-2xl animate-float" />
-  </div>
-);
-
-const IconButton = ({ Icon }) => (
-  <div className="relative group hover:scale-110 transition-transform duration-300">
-    <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full blur opacity-30 group-hover:opacity-75 transition duration-300" />
-    <div className="relative p-2 sm:p-3 bg-black/50 backdrop-blur-sm rounded-full border border-white/10">
-      <Icon className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-white" />
-    </div>
-  </div>
-);
-
-const WelcomeScreen = ({ onLoadingComplete }) => {
-  const [isLoading, setIsLoading] = useState(true);
+function ParticleCanvas() {
+  const canvasRef = useRef(null);
 
   useEffect(() => {
-    AOS.init({
-      duration: 1000,
-      once: false,
-      mirror: false,
-    });
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
 
+    let animId;
+    const dpr = Math.min(window.devicePixelRatio, 2);
+    const particles = [];
+    const PARTICLE_COUNT = 120;
+
+    const resize = () => {
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      canvas.style.width = window.innerWidth + 'px';
+      canvas.style.height = window.innerHeight + 'px';
+      ctx.scale(dpr, dpr);
+    };
+    resize();
+
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      particles.push({
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        size: Math.random() * 2 + 0.5,
+        speedX: (Math.random() - 0.5) * 0.4,
+        speedY: (Math.random() - 0.5) * 0.4,
+        opacity: Math.random() * 0.5 + 0.1,
+      });
+    }
+
+    const draw = () => {
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+      particles.forEach((p) => {
+        p.x += p.speedX;
+        p.y += p.speedY;
+        if (p.x < 0 || p.x > window.innerWidth) p.speedX *= -1;
+        if (p.y < 0 || p.y > window.innerHeight) p.speedY *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(108, 99, 255, ${p.opacity})`;
+        ctx.fill();
+      });
+
+      particles.forEach((a, i) => {
+        for (let j = i + 1; j < particles.length; j++) {
+          const b = particles[j];
+          const dx = a.x - b.x;
+          const dy = a.y - b.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120) {
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.strokeStyle = `rgba(108, 99, 255, ${0.08 * (1 - dist / 120)})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      });
+
+      animId = requestAnimationFrame(draw);
+    };
+    draw();
+
+    window.addEventListener('resize', resize);
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener('resize', resize);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="absolute inset-0" />;
+}
+
+export default function WelcomeScreen({ onLoadingComplete }) {
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
     const timer = setTimeout(() => {
-      setIsLoading(false);
-      setTimeout(() => {
-        onLoadingComplete?.();
-      }, 1000);
-    }, 4000);
-
+      setIsVisible(false);
+      setTimeout(() => onLoadingComplete?.(), 800);
+    }, WELCOME_DURATION);
     return () => clearTimeout(timer);
   }, [onLoadingComplete]);
 
-  const containerVariants = {
-    exit: {
-      opacity: 0,
-      scale: 1.1,
-      filter: "blur(10px)",
-      transition: {
-        duration: 0.8,
-        ease: "easeInOut",
-        when: "beforeChildren",
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const childVariants = {
-    exit: {
-      y: -20,
-      opacity: 0,
-      transition: {
-        duration: 0.4,
-        ease: "easeInOut",
-      },
-    },
+  const handleSkip = () => {
+    setIsVisible(false);
+    setTimeout(() => onLoadingComplete?.(), 400);
   };
 
   return (
     <AnimatePresence>
-      {isLoading && (
+      {isVisible && (
         <motion.div
-          className="fixed inset-0 bg-[#030014]"
+          className="fixed inset-0 z-[200] bg-[#0A0A0F] flex items-center justify-center overflow-hidden"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          exit="exit"
-          variants={containerVariants}
+          exit={{
+            opacity: 0,
+            scale: 1.05,
+            filter: 'blur(12px)',
+            transition: { duration: 0.8, ease: 'easeInOut' },
+          }}
+          onClick={handleSkip}
         >
-          <BackgroundEffect />
+          <ParticleCanvas />
 
-          <div className="relative min-h-screen flex items-center justify-center px-4">
-            <div className="w-full max-w-4xl mx-auto">
-              {/* Icons */}
-              <motion.div
-                className="flex justify-center gap-3 sm:gap-4 md:gap-8 mb-6 sm:mb-8 md:mb-12"
-                variants={childVariants}
-              >
-                {[Code2, User, Github].map((Icon, index) => (
-                  <div
-                    key={index}
-                    data-aos="fade-down"
-                    data-aos-delay={index * 200}
-                  >
-                    <IconButton Icon={Icon} />
-                  </div>
-                ))}
-              </motion.div>
+          <div className="relative z-10 text-center space-y-8">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.8, ease: 'easeOut' }}
+            >
+              <h1 className="text-5xl sm:text-6xl md:text-8xl font-bold tracking-tight">
+                <span className="gradient-text">H</span>
+                <span className="text-white mx-1">.</span>
+                <span className="gradient-text">H</span>
+              </h1>
+            </motion.div>
 
-              {/* Welcome Text */}
-              <motion.div
-                className="text-center mb-6 sm:mb-8 md:mb-12"
-                variants={childVariants}
-              >
-                <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold space-y-2 sm:space-y-4">
-                  <div className="mb-2 sm:mb-4">
-                    <span
-                      data-aos="fade-right"
-                      data-aos-delay="200"
-                      className="inline-block px-2 bg-gradient-to-r from-white via-blue-100 to-purple-200 bg-clip-text text-transparent"
-                    >
-                      Welcome
-                    </span>{" "}
-                    <span
-                      data-aos="fade-right"
-                      data-aos-delay="400"
-                      className="inline-block px-2 bg-gradient-to-r from-white via-blue-100 to-purple-200 bg-clip-text text-transparent"
-                    >
-                      To
-                    </span>{" "}
-                    <span
-                      data-aos="fade-right"
-                      data-aos-delay="600"
-                      className="inline-block px-2 bg-gradient-to-r from-white via-blue-100 to-purple-200 bg-clip-text text-transparent"
-                    >
-                      My
-                    </span>
-                  </div>
-                  <div>
-                    <span
-                      data-aos="fade-up"
-                      data-aos-delay="800"
-                      className="inline-block px-2 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"
-                    >
-                      Portfolio
-                    </span>{" "}
-                    <span
-                      data-aos="fade-up"
-                      data-aos-delay="1000"
-                      className="inline-block px-2 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"
-                    >
-                      Website
-                    </span>
-                  </div>
-                </h1>
-              </motion.div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8, duration: 0.6 }}
+            >
+              <TerminalTypewriter text="hhijazi.vercel.app" speed={65} delay={900} />
+            </motion.div>
 
-              {/* Website Link */}
-              <motion.div
-                className="text-center"
-                variants={childVariants}
-                data-aos="fade-up"
-                data-aos-delay="1200"
-              >
-                <a
-                  href="https://www.abc.com/"
-                  className="inline-flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-3 rounded-full relative group hover:scale-105 transition-transform duration-300"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-indigo-600/20 to-purple-600/20 rounded-full blur-md group-hover:blur-lg transition-all duration-300" />
-                  <div className="relative flex items-center gap-2 text-lg sm:text-xl md:text-2xl">
-                    <Globe className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-600" />
-                    <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                      <TypewriterEffect text="hhijazi.vercel.app" />
-                    </span>
-                  </div>
-                </a>
-              </motion.div>
-            </div>
+            <motion.p
+              className="text-xs text-[#8B8B9E] tracking-widest uppercase"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 2.2, duration: 0.5 }}
+            >
+              Click anywhere to enter
+            </motion.p>
           </div>
+
+          {/* Corner accents */}
+          <div className="absolute top-8 left-8 w-12 h-12 border-l border-t border-[rgba(108,99,255,0.2)]" />
+          <div className="absolute top-8 right-8 w-12 h-12 border-r border-t border-[rgba(108,99,255,0.2)]" />
+          <div className="absolute bottom-8 left-8 w-12 h-12 border-l border-b border-[rgba(108,99,255,0.2)]" />
+          <div className="absolute bottom-8 right-8 w-12 h-12 border-r border-b border-[rgba(108,99,255,0.2)]" />
         </motion.div>
       )}
     </AnimatePresence>
   );
-};
-
-export default WelcomeScreen;
+}

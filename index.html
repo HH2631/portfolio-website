@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="//hhijazi.vercel.app">
-    <link rel="preload" href="/profile-new.jpg" as="image" type="image/jpeg">
+    <link rel="preload" href="/profile-new.jpg" as="image" type="image/jpeg" fetchpriority="low">
     
     <!-- Primary Meta Tags -->
     <title>Hamzeh Hijazi - Full-Stack Developer & Innovation Enthusiast | Portfolio</title>
@@ -52,8 +52,8 @@
     <meta property="article:publisher" content="https://www.linkedin.com/in/hbhijazi" />
     
     <!-- Additional Meta Tags -->
-    <meta name="theme-color" content="#6366f1" />
-    <meta name="msapplication-navbutton-color" content="#6366f1" />
+    <meta name="theme-color" content="#0A0A0F" />
+    <meta name="msapplication-navbutton-color" content="#6C63FF" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Hamzeh Hijazi" />
@@ -128,13 +128,10 @@
     }
     </script>
     
-    <!-- Performance Optimization -->
-    <link rel="prefetch" href="/Coding.gif">
-    <link rel="prefetch" href="/Lottie.json">
+    <!-- X-Frame-Options removed: should only be set via HTTP header -->
     
     <!-- Security Headers -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-    <meta http-equiv="X-Frame-Options" content="DENY" />
     <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
     
@@ -150,15 +147,15 @@
       body {
         margin: 0;
         padding: 0;
-        background: #030014;
-        color: white;
+        background: #0A0A0F;
+        color: #FAFAFA;
         font-family: system-ui, -apple-system, sans-serif;
       }
       
       .loading {
         position: fixed;
         inset: 0;
-        background: linear-gradient(135deg, #030014 0%, #1a0b3d 50%, #030014 100%);
+        background: #0A0A0F;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -168,8 +165,8 @@
       .spinner {
         width: 40px;
         height: 40px;
-        border: 4px solid rgba(99, 102, 241, 0.1);
-        border-left: 4px solid #6366f1;
+        border: 2px solid rgba(108, 99, 255, 0.1);
+        border-left: 2px solid #6C63FF;
         border-radius: 50%;
         animation: spin 1s linear infinite;
       }
