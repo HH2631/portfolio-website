@@ -11,6 +11,7 @@ import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import WelcomeScreen from './Pages/WelcomeScreen';
 import Home from './Pages/Home';
+import WhatICanBuildForYou from './components/sections/WhatICanBuildForYou';
 import About from './Pages/About';
 import Portofolio from './Pages/Portofolio';
 import ContactPage from './Pages/Contact';
@@ -44,6 +45,7 @@ const LandingPage = ({ showWelcome, setShowWelcome }) => (
         <Navbar />
         <main className="relative z-10">
           <Home />
+          <WhatICanBuildForYou />
           <About />
           <Portofolio />
           <ContactPage />
